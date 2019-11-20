@@ -79,20 +79,6 @@ class Character:
         print("using item")
         self.inventory.pop(choice).apply(self)
         return True
-    
-    def unequip(self, item_slot):
-        stat_map = {"sword" : self.power, "armor": self.defense, "helmet": self.defense, "shoes": self.evade }
-        if item_slot in stat_map:
-            if self.equipment[item_slot] != None:
-                stat_map[item_slot] -= self.equipment[item_slot].value
-                self.inventory.append(self.equipment[item_slot])
-                self.equipment[item_slot] = None
-    
-    def equip(self, item):
-        stat_map = {"sword" : self.power, "armor": self.defense, "helmet": self.defense, "shoes": self.evade }
-        print(f'equipping {item.name} in {item.slot}')
-        stat_map[item.slot] += item.value
-        self.equipment[item.slot] = item
 
     # THIS IS PESUDOCODE! FLESH OUT METHOD BEFORE USE!
     # def changeClass(self, classtype):
@@ -116,11 +102,12 @@ class Hero(Character):
         super().__init__(name, health, power, coins, bounty)
 
     def attack(self, victim):
-        damage = self.power
         if 1 == random.randint(1,5):
-            damage *= 1.2
-        print(f"{self.name} attacks for {damage}")
-        victim.take_damage(damage)
+            print(f"{self.name} attacks for {self.power * 1.2}")
+            victim.take_damage((self.power * 1.2))
+        else:
+            print(f"{self.name} attacks for {self.power}")
+            victim.take_damage(self.power)
         if not victim.is_alive():
             print(f"{self.name} has killed {victim.name}")
             self.loot(victim)

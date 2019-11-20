@@ -1,17 +1,12 @@
 class Item:
-    def __init__(self, cost, name, value, attribute, slot = None):
+    def __init__(self, cost, name, value, attribute):
         self.cost = cost
         self.name = name
         self.value = value
         self.attribute = attribute
-        self.slot = slot
 
     def __str__(self):
         return f"{self.name}. Equip to increase {self.attribute} by {self.value}"
-
-    def apply(self, char):
-        char.unequip(self.slot)
-        char.equip(self)
 
 class Potion(Item):
     def __init__(self, cost =5, name= "potion", value = 2, attribute = "health"):
@@ -24,31 +19,43 @@ class Potion(Item):
         print(f"{char.name}'s health has increased to {char.health}")
 
 class Sword(Item):
-    def __init__(self, cost =10, name= "iron sword", value = 2, attribute = "power", slot = "sword"):
-        super().__init__(cost, name, value, attribute, slot)
+    def __init__(self, cost =10, name= "iron sword", value = 2, attribute = "power"):
+        super().__init__(cost, name, value, attribute)
     
-    # def apply(self, char):
-    #     char.unequip(self.slot)
-    #     char.power += self.value
-    #     char.equipment[self.slot] = self
+    def apply(self, char):
+        if char.equipment["sword"] != None:
+            char.power -= char.equipment["sword"].value
+            char.inventory.append(char.equipment["sword"])
+            char.equipment["sword"] = None
+        
+        char.power += self.value
+        char.equipment["sword"] = self
 
 class Armor(Item):
-    def __init__(self, cost=10, name="leather armor", value=2, attribute = "defense", slot = "armor"):
-        super().__init__(cost, name, value, attribute, slot)
+    def __init__(self, cost=10, name="leather armor", value=2, attribute = "defense"):
+        super().__init__(cost, name, value, attribute)
 
-    # def apply(self, char):
-    #     char.unequip(self.slot)
-    #     char.equip(self)
+    def apply(self, char):
+        if char.equipment["armor"] != None:
+            char.defense -= char.equipment["armor"].value
+            char.inventory.appened(char.equipment["armor"])
+            char.equipment["armor"] = None
+        
+        char.defense += self.value
+        char.equipment["armor"] = self
 
 class Shoes(Item):
-    def __init__(self, cost =10, name = "red shoes", value=2, attribute = "evade", slot = "shoes"):        
-        super().__init__(cost, name, value, attribute, slot)
+    def __init__(self, cost =10, name = "red shoes", value=2, attribute = "evade"):        
+        super().__init__(cost, name, value, attribute)
 
-    # def apply(self, char):
-    #     stat_map = {"sword" : self.power, "armor": self.defense, "helmet": self.defense, "shoes": self.evade }
-    #     char.unequip(self.slot)
-    #     stat_map[self.slot] += self.value
-    #     char.equipment[self.slot] = self
+    def apply(self, char):
+        if char.equipment["shoes"] != None:
+            char.evade -= char.equipment["shoes"].value
+            char.inventory.appened(char.equipment["shoes"])
+            char.equipment["shoes"] = None
+        
+        char.evade += self.value
+        char.equipment["shoes"] = self
 
 class Store:
     name = "Olde Shoppe"
@@ -78,5 +85,5 @@ class Store:
                 
     def restock(self, level = 1):
         if level == 1:
-            self.items = [Potion(), Sword(), Armor(), Potion(25, "XPotion", 999)]
+            self.items = [Potion(), Sword(), Sword(2, "Buster Sword", 7), Armor(), Potion(25, "XPotion", 999)]
             self.name = "Olde Shoppe"
