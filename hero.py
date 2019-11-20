@@ -1,7 +1,7 @@
 import random
 stat_map = {"sword" : 'power', "armor": 'defense', "helmet": 'defense', "shoes": 'evade' }
 class Character:
-    def __init__(self,name, health, power, coins = 0, bounty = 0):
+    def __init__(self,name, health, power, coins = 0, bounty = 0, inventory = []):
         self.name = name
         self.health = health
         self.maxhealth = health
@@ -11,9 +11,21 @@ class Character:
         self.bountyboard = 0
         self.defense = 0
         self.evade = 0
-        self.inventory = []
+        self.inventory = inventory
         self.equipment = {"sword": None, "armor": None, "helmet": None, "shoes":None}
-        
+
+    def changeClass(self, classtype):
+        if classtype in class_map:
+            self.unequip("sword")
+            self.unequip("armor")    
+            self.unequip("helmet")    
+            self.unequip("shoes")    
+            new_char = class_map[classtype](self.name, self.health, self.power, self.coins, self.bounty, self.inventory)
+            return new_char
+        else:
+            print("no class exists!")
+            return self
+
 
     def __str__(self):
         return f"{self.name} has {self.health} health and {self.power} power"
@@ -94,26 +106,11 @@ class Character:
         setattr(self, stat_map[item.slot], getattr(self, stat_map[item.slot]) + item.value)
         self.equipment[item.slot] = item
 
-    # THIS IS PESUDOCODE! FLESH OUT METHOD BEFORE USE!
-    # def changeClass(self, classtype):
-            # dict1 = {"zombie": zombie} 
-            # tuple_attributes = ()
-            # new_guy = dict1["zombie"](tuple_attributes)
-
-    #     if classtype == "ZOMBIE":
-    #         new_char = zombie(self.all_my_passable_attributes)
-    #     elif classtype == whatever_class:
-    #         new_char = whatever_class(self.all_my_important_attributes)
-    #     else:
-    #         print('no such class!')
-
-
-    #         return self
-    #     return new_char
+    
 
 class Hero(Character):
-    def __init__(self, name ="cecil", health = 10, power = 5, coins = 20, bounty = 0):
-        super().__init__(name, health, power, coins, bounty)
+    def __init__(self, name ="cecil", health = 10, power = 5, coins = 20, bounty = 0, inventory = []):
+        super().__init__(name, health, power, coins, bounty, inventory)
 
     def attack(self, victim):
         damage = self.power
@@ -126,19 +123,19 @@ class Hero(Character):
             self.loot(victim)
     
 class Goblin(Character):
-    def __init__(self, name = "redcap", health = 6, power = 2, coins = 2, bounty = 6):
-            super().__init__(name, health, power, coins, bounty)
+    def __init__(self, name = "redcap", health = 6, power = 2, coins = 2, bounty = 6, inventory = []):
+            super().__init__(name, health, power, coins, bounty, inventory)
 
 class Zombie(Character):
-    def __init__(self, name = "romero", health = 0, power = 2, coins = 0, bounty = 0):
-            super().__init__(name, health, power, coins, bounty)
+    def __init__(self, name = "romero", health = 0, power = 2, coins = 0, bounty = 0, inventory = []):
+            super().__init__(name, health, power, coins, bounty, inventory)
     
     def is_alive(self):
         return (self.health < 0)
 
 class Medic(Character):
-    def __init__(self, name = "florence", health = 10, power = 3, coins = 5, bounty = 10):
-            super().__init__(name, health, power, coins, bounty)
+    def __init__(self, name = "florence", health = 10, power = 3, coins = 5, bounty = 10, inventory = []):
+            super().__init__(name, health, power, coins, bounty, inventory)
 
     def take_damage(self, dam):
         super().take_damage(dam)
@@ -146,16 +143,16 @@ class Medic(Character):
             self.health +=2
 
 class Shadow(Character):
-    def __init__(self, name = "kerrigan", health = 1, power = 3, coins = 0, bounty = 10):
-            super().__init__(name, health, power, coins, bounty)
+    def __init__(self, name = "kerrigan", health = 1, power = 3, coins = 0, bounty = 10, inventory = []):
+            super().__init__(name, health, power, coins, bounty, inventory)
 
     def take_damage(self, dam):
         if (1 == random.randint(1,10)):
             super().take_damage(dam)
 
 class Necromancer(Character):
-    def __init__(self, name = "ordan", health = 8, power = 3, coins = 0, bounty = 0):
-            super().__init__(name, health, power, coins, bounty)
+    def __init__(self, name = "ordan", health = 8, power = 3, coins = 0, bounty = 0, inventory = []):
+            super().__init__(name, health, power, coins, bounty, inventory)
 
     # def attack(self, victim):
     #    victim.take_damage(self.power)
@@ -163,20 +160,23 @@ class Necromancer(Character):
     #        victim = zombie(victim.health, victim.power, victim.name)
 
 class Archer(Character):
-    def __init__(self, name = "orlando", health = 10, power = 4, coins = 0, bounty = 0):
-            super().__init__(name, health, power, coins, bounty)
+    def __init__(self, name = "orlando", health = 10, power = 4, coins = 0, bounty = 0, inventory = []):
+            super().__init__(name, health, power, coins, bounty, inventory)
 
 class Wizard(Character):
-    def __init__(self, name = "merlin", health = 8 , power = 1, coins = 0,  bounty = 6):
-            super().__init__(name, health, power, coins, bounty)
+    def __init__(self, name = "merlin", health = 8 , power = 1, coins = 0,  bounty = 6, inventory = []):
+            super().__init__(name, health, power, coins, bounty, inventory)
 
     def attack(self, victim):
         attack_power = self.power
         if (1 == random.randint(1,2)):
-            print(f"{self.name} steals your attack power!")
+            print(f"{self.name} borrows your attack power!")
             attack_power = victim.power
         print(f"{self.name} attacks for {self.power}")
         victim.take_damage(attack_power)
         if not victim.is_alive():
            print(f"{self.name} has killed {victim.name}")
            self.loot(victim)
+
+
+class_map = {"hero": Hero, "goblin": Goblin, "zombie": Zombie, "medic" : Medic, "shadow": Shadow, "necromancer": Necromancer, "archer": Archer, "wizard": Wizard}
