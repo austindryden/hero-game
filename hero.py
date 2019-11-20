@@ -1,4 +1,5 @@
 import random
+stat_map = {"sword" : 'power', "armor": 'defense', "helmet": 'defense', "shoes": 'evade' }
 class Character:
     def __init__(self,name, health, power, coins = 0, bounty = 0):
         self.name = name
@@ -12,7 +13,8 @@ class Character:
         self.evade = 0
         self.inventory = []
         self.equipment = {"sword": None, "armor": None, "helmet": None, "shoes":None}
-    
+        
+
     def __str__(self):
         return f"{self.name} has {self.health} health and {self.power} power"
 
@@ -81,17 +83,15 @@ class Character:
         return True
     
     def unequip(self, item_slot):
-        stat_map = {"sword" : self.power, "armor": self.defense, "helmet": self.defense, "shoes": self.evade }
         if item_slot in stat_map:
             if self.equipment[item_slot] != None:
-                stat_map[item_slot] -= self.equipment[item_slot].value
+                setattr(self, stat_map[item_slot], getattr(self, stat_map[item_slot]) - self.equipment[item_slot].value)        
                 self.inventory.append(self.equipment[item_slot])
                 self.equipment[item_slot] = None
     
     def equip(self, item):
-        stat_map = {"sword" : self.power, "armor": self.defense, "helmet": self.defense, "shoes": self.evade }
         print(f'equipping {item.name} in {item.slot}')
-        stat_map[item.slot] += item.value
+        setattr(self, stat_map[item.slot], getattr(self, stat_map[item.slot]) + item.value)
         self.equipment[item.slot] = item
 
     # THIS IS PESUDOCODE! FLESH OUT METHOD BEFORE USE!

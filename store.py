@@ -78,5 +78,5 @@ class Store:
                 
     def restock(self, level = 1):
         if level == 1:
-            self.items = [Potion(), Sword(), Armor(), Potion(25, "XPotion", 999)]
+            self.items = [Potion(), Sword(), Sword(2, "Buster Sword", 7), Armor(), Potion(25, "XPotion", 999)]
             self.name = "Olde Shoppe"
