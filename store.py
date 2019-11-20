@@ -6,7 +6,7 @@ class Item:
         self.attribute = attribute
 
     def __str__(self):
-        return f"{self.name}. Equip to increase {str(attribute)} by {self.value}"
+        return f"{self.name}. Equip to increase {attribute} by {self.value}"
 
 class Potion(Item):
     def __init__(self, cost =5, name= "potion", value = 2, attribute = "health"):
@@ -32,7 +32,7 @@ class Sword(Item):
         char.equipment["sword"] = self
 
 class Armor(Item):
-    def __init__(self, cost=10, name="leather armor", value=2, attribute = defense):
+    def __init__(self, cost=10, name="leather armor", value=2, attribute = "defense"):
         super().__init__(cost, name, value, attribute)
 
     def apply(self, char):
@@ -45,7 +45,7 @@ class Armor(Item):
         char.equipment["armor"] = self
 
 class Shoes(Item):
-    def __init__(self, cost =10, name = "red shoes", value=2, attribute = evade):        
+    def __init__(self, cost =10, name = "red shoes", value=2, attribute = "evade"):        
         super().__init__(cost, name, value, attribute)
 
     def apply(self, char):

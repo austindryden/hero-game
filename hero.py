@@ -43,7 +43,12 @@ class Character:
         print(str(self))
 
     def take_damage(self, dam):
-        self.health -= (dam - self.defense)
+        damage = (dam - self.defense)
+        if self.evade > random.randint(1,10):
+            print("you evaded attack!")
+        else:
+            print(f"you have taken {damage} damage")
+            self.health -= damage
 
     def collectbounty(self):
         self.coins += self.bountyboard
