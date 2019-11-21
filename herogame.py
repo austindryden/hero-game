@@ -9,6 +9,7 @@ def main():
     battle = Battle()
     playing = True
     win = None
+    rounds = 0
     
     enemies = [Goblin, Zombie, Wizard, Necromancer, Archer, Shadow]
     while playing:
@@ -23,6 +24,8 @@ def main():
         if choice == 2:
             player.collectbounty()
             store.restock()
+            if rounds > 10:
+                store.restock(2)
             store.go_shopping(player)
         if choice == 3:
             player.useinventory()
@@ -33,7 +36,6 @@ def main():
                 print(f" {key}")
             new_class = input("select a class ")
             player = player.changeClass(new_class)
-            
         if choice == 5:
             playing = False
     print("thanks for fighting")

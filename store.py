@@ -26,11 +26,6 @@ class Potion(Item):
 class Sword(Item):
     def __init__(self, cost =10, name= "iron sword", value = 2, attribute = "power", slot = "sword"):
         super().__init__(cost, name, value, attribute, slot)
-    
-    # def apply(self, char):
-    #     char.unequip(self.slot)
-    #     char.power += self.value
-    #     char.equipment[self.slot] = self
 
 class Armor(Item):
     def __init__(self, cost=10, name="leather armor", value=2, attribute = "defense", slot = "armor"):
